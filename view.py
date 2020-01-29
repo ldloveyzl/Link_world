@@ -57,6 +57,7 @@ class Chat(QWidget):
         widget1=QTableWidget()
         widget1.setColumnCount(2)
         widget1.setRowCount(5)
+        widget1.horizontalHeader().setVisible(False)
         # 设置QTableWidget列宽固定
         widget1.horizontalHeader().resizeSection(0, 117)
         widget1.horizontalHeader().resizeSection(1, 118)
