@@ -3,7 +3,7 @@ import sys
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication, QLabel, QWidget, QVBoxLayout, QFormLayout, QLineEdit, QPushButton, \
-    QHBoxLayout, QDesktopWidget
+    QHBoxLayout, QDesktopWidget, QTableWidget
 
 
 class LinkWorld(QWidget):
@@ -36,6 +36,12 @@ class Chat(QWidget):
     def __init__(self):
         super().__init__()
         self.UI()
+        self.talker=""
+
+    def outSelect(self, Item=None):
+        if not Item:
+            self.talker=Item.text()
+
     def UI(self):
         self.setWindowTitle("Chat_as_you_want")
         self.setGeometry(500, 200, 900, 600)  #绝对位置
@@ -47,23 +53,34 @@ class Chat(QWidget):
         self.move(qr.topLeft())
         h1=QHBoxLayout(self)
         frm1 = QFormLayout(self)
-        edit1=QLineEdit(self)
-        edit1.setFocusPolicy(QtCore.Qt.NoFocus)
-        edit1.setFixedHeight(400)
-        edit1.setFixedWidth(300)
+
+        widget1=QTableWidget()
+        widget1.setColumnCount(2)
+        widget1.setRowCount(5)
+        # 设置QTableWidget列宽固定
+        widget1.horizontalHeader().resizeSection(0, 117)
+        widget1.horizontalHeader().resizeSection(1, 118)
+        #tableWidget->verticalHeader()->setDefaultSectionSize(10); //设置行高
+        widget1.verticalHeader().setDefaultSectionSize(35)
+        widget1.itemClicked.connect(self.outSelect)  # 单击获取单元格中的内容
+
         edit2=QLineEdit(self)
         edit2.setFocusPolicy(QtCore.Qt.NoFocus)  #设置不可编辑
         edit2.setFixedHeight(400)
         edit2.setFixedWidth(600)
-        frm1.addRow(edit1,edit2)
+
+        frm1.addRow(widget1,edit2)
+
         label1=QLabel('pic',self)
         edit3=QLineEdit(self)
         # edit3.setFocusPolicy(QtCore.Qt.NoFocus)
         edit3.setFixedHeight(200)
         edit3.setAlignment(Qt.AlignLeft|Qt.AlignTop)
         # edit3.setFixedWidth(600)
+
         frm1.addRow(label1,edit3)
         frm1.setSpacing(0)  #无缝
+
         h1.addLayout(frm1)
         self.show() #窗口显示
 if __name__ == '__main__':
