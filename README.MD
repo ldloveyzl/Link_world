@@ -9,8 +9,12 @@
 2.概要 使用udp套接字 使用pyqt5建view界面，，，，
 发文件tcp 和 聊天udp 协议确定
 3建表 user id name pwd name也设置为索引
-    用户对话记录表 chat_his id sender rever record time    name是接受信息的人
-    friend id name fre
+    create table user(id int auto_increment primary key,name varchar(20) not null,
+     pwd varchar(30) not null,index(name));
+    用户对话记录表 chat_his id sender rever record times    rever是接受信息的人
+    create table chat_his(id int primary key auto_increment,sender varchar(20) not null,rever varchar(20) not null,record text,times time);
+    friend id name frie
+    create table friend(id int primary key auto_increment,name varchar(20),frie varchar(20));
 4技术点
 通信协议 文件 F 文件 或者F
         聊天 C name name1 msg
