@@ -26,15 +26,30 @@ class Fd:
         # 注册 R name pwd
         if req=="R":
             self.register(datas[1],datas[2],addr)
+        elif req=='L':
+            self.login(datas[1],datas[2],addr)
 
     def register(self, name, pwd,addr):
         if db.register(name,pwd):
             self.fd.sendto("OK".encode(),addr)
         else:
             self.fd.sendto("NO".encode(), addr)
+
+    def login(self, name, pwd, addr):
+        if db.login(name, pwd):
+            friends=self.get_friends(name)
+            self.fd.sendto("OK".encode(), addr)
+        else:
+            self.fd.sendto("NO".encode(), addr)
+
+    def get_friends(self,name):
+        return db.getfriends(name)
+
+
 if __name__ == '__main__':
     f=Fd()
-    f.deal_req()
+    while True:
+        f.deal_req()
 
 
 

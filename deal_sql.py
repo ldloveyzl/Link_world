@@ -16,7 +16,7 @@ class Database:
                                   port=3306,
                                   user='root',
                                   password='123456',
-                                  database='dict',
+                                  database='chat',
                                   charset='utf8')
 
         # 生成游标对象 (操作数据库,执行sql语句,获取结果)
@@ -34,26 +34,31 @@ class Database:
         if self.cur.fetchone():
             return False
         # 插入数据库
-        sql = "insert into user (name,passwd) values (%s,%s);"
+        sql = "insert into user (name,pwd) values (%s,%s);"
         passwd = change_passwd(passwd)  # 密码加密
-        try:
-            self.cur.execute(sql, [name, passwd])
-            self.db.commit()
-            return True
-        except:
-            self.db.rollback()
-            return False
-
-    def login(self, name, passwd):
-        sql = "select name from user " \
-              "where name=%s and passwd=%s;"
-        passwd = change_passwd(passwd)
         self.cur.execute(sql, [name, passwd])
+        self.db.commit()
+        return True
+        # try:
+        #     self.cur.execute(sql, [name, passwd])
+        #     self.db.commit()
+        #     return True
+        # except:
+        #     self.db.rollback()
+        #     return False
+
+    def login(self, name, pwd):
+        sql = "select name from user " \
+              "where name=%s and pwd=%s;"
+        pwd = change_passwd(pwd)
+        self.cur.execute(sql, [name, pwd])
         if self.cur.fetchone():
             return True
-        else:
-            return False
-
+    def getfriends(self,name):
+        sql="select frie from friend where name=%s;"
+        self.cur.execute(sql,name)
+        friends=self.cur.fetchall()
+        print(friends)
     def query(self, word):
         sql = "select mean from words where word=%s;"
         self.cur.execute(sql, [word])
@@ -82,6 +87,6 @@ class Database:
 
 if __name__ == '__main__':
     db = Database()
-    db.register('Tom', '123')
-    db.login('Tom', '123')
+    db.register('ldloveyzl', 'lmjlove1230')
+    # db.login('Tom', '123')
     db.close()

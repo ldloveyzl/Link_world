@@ -15,6 +15,7 @@
     create table chat_his(id int primary key auto_increment,sender varchar(20) not null,rever varchar(20) not null,record text,times time);
     friend id name frie
     create table friend(id int primary key auto_increment,name varchar(20),frie varchar(20));
+insert into friend (name,frie) values ("uu","ll"),("uu","tt"),("uu","ss");
 4技术点
 通信协议 文件 F 文件 或者F
         聊天 C name name1 msg

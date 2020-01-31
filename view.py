@@ -43,13 +43,24 @@ class LinkWorld(QWidget):
                                     "Sorry~",
                                     "注册失败",
                                     QMessageBox.Yes)
-
+        else:
+            QMessageBox.information(self,  # 使用infomation信息框
+                                    "Congratulate!",
+                                    "注册成功",
+                                    QMessageBox.Yes)
 
     def btn2_click(self):
-        res = Chat()
-        global list1
-        list1.append(res)
-
+        n = self.name.text()
+        p = self.pwd.text()
+        if s.login(n,p):
+            res = Chat()
+            global list1
+            list1.append(res)
+        else:
+            QMessageBox.information(self,  # 使用infomation信息框
+                                    "Error",
+                                    "登录失败",
+                                    QMessageBox.Yes)
 
 class Chat(QWidget):
     def __init__(self):
@@ -60,6 +71,7 @@ class Chat(QWidget):
     def outSelect(self, Item=None):
         if not Item:
             self.talk_to = Item.text()
+
 
     def UI(self):
         self.setWindowTitle("Chat_as_you_want")
