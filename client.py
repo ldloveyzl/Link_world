@@ -19,7 +19,7 @@ class Client:
         str1 = "L " + name + ' ' + pwd
         self.client.sendto(str1.encode(), ADDR)
         data, addr = self.client.recvfrom(2048)
-        info = data.decode()
-        if info == 'OK':
-            return True
+        info = data.decode().split(" ",1)    # "OK friend friend   "
+        if info[0] == 'OK':
+            return info[1]
 

@@ -38,7 +38,8 @@ class Fd:
     def login(self, name, pwd, addr):
         if db.login(name, pwd):
             friends=self.get_friends(name)
-            self.fd.sendto("OK".encode(), addr)
+            msg="OK"+" "+friends
+            self.fd.sendto(msg.encode(), addr)
         else:
             self.fd.sendto("NO".encode(), addr)
 

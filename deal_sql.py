@@ -2,6 +2,7 @@ import pymysql
 import hashlib
 import deal_sql
 
+
 # 传入一个密码返回加密后的密码
 def change_passwd(passwd):
     hash = hashlib.md5()  # md5对象
@@ -54,11 +55,17 @@ class Database:
         self.cur.execute(sql, [name, pwd])
         if self.cur.fetchone():
             return True
-    def getfriends(self,name):
-        sql="select frie from friend where name=%s;"
-        self.cur.execute(sql,name)
-        friends=self.cur.fetchall()
-        print(friends)
+
+    def getfriends(self, name):
+        sql = "select frie from friend where name=%s;"
+        self.cur.execute(sql, name)
+        str1 = ''
+        friends = self.cur.fetchall()
+        for i in friends:
+            str1 += " " + i[0]
+        print(str1)
+        return str1.strip()
+
     def query(self, word):
         sql = "select mean from words where word=%s;"
         self.cur.execute(sql, [word])
@@ -87,6 +94,7 @@ class Database:
 
 if __name__ == '__main__':
     db = Database()
-    db.register('ldloveyzl', 'lmjlove1230')
+    # db.register('ldloveyzl', 'lmjlove1230')
+    db.getfriends('uu')
     # db.login('Tom', '123')
     db.close()

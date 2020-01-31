@@ -52,8 +52,9 @@ class LinkWorld(QWidget):
     def btn2_click(self):
         n = self.name.text()
         p = self.pwd.text()
-        if s.login(n,p):
-            res = Chat()
+        result=s.login(n,p)
+        if result:
+            res = Chat(result)           #result为朋友信息
             global list1
             list1.append(res)
         else:
@@ -63,9 +64,11 @@ class LinkWorld(QWidget):
                                     QMessageBox.Yes)
 
 class Chat(QWidget):
-    def __init__(self):
+    def __init__(self,result):
         super().__init__()
         self.UI()
+        print(result)
+        self.friends=result
         self.talk_to = ""
 
     def outSelect(self, Item=None):
@@ -85,15 +88,20 @@ class Chat(QWidget):
         h1 = QHBoxLayout(self)
         frm1 = QFormLayout(self)
 
+        friend_info=self.friends.split(" ")
+        l=len(friend_info)
+
         widget1 = QTableWidget()
         widget1.setColumnCount(2)
-        widget1.setRowCount(5)
+        widget1.setRowCount(l)
         widget1.horizontalHeader().setVisible(False)
         # 设置QTableWidget列宽固定
         widget1.horizontalHeader().resizeSection(0, 117)
         widget1.horizontalHeader().resizeSection(1, 118)
         # tableWidget->verticalHeader()->setDefaultSectionSize(10); //设置行高
         widget1.verticalHeader().setDefaultSectionSize(35)
+        for i in range(l):
+            widget1.setItem(i,0,QTableWidgetItem(friend_info[i]))
         widget1.itemClicked.connect(self.outSelect)  # 单击获取单元格中的内容
 
         edit2 = QLineEdit(self)
