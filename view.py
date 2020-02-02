@@ -6,6 +6,8 @@ from PyQt5.QtWidgets import *
 from client import *
 
 s = Client()
+
+
 class LinkWorld(QWidget):
     def __init__(self):
         super().__init__()
@@ -38,7 +40,7 @@ class LinkWorld(QWidget):
     def btn1_click(self):
         n = self.name.text()
         p = self.pwd.text()
-        if not s.register(n,p):
+        if not s.register(n, p):
             QMessageBox.information(self,  # 使用infomation信息框
                                     "Sorry~",
                                     "注册失败",
@@ -52,9 +54,9 @@ class LinkWorld(QWidget):
     def btn2_click(self):
         n = self.name.text()
         p = self.pwd.text()
-        result=s.login(n,p)
+        result = s.login(n, p)
         if result:
-            res = Chat(result)           #result为朋友信息
+            res = Chat(result)  # result为朋友信息
             global list1
             list1.append(res)
         else:
@@ -63,18 +65,27 @@ class LinkWorld(QWidget):
                                     "登录失败",
                                     QMessageBox.Yes)
 
+
 class Chat(QWidget):
-    def __init__(self,result):
+    def __init__(self, result):
         super().__init__()
+        self.friends = result
+        self.msg = QLineEdit(self)
         self.UI()
-        print(result)
-        self.friends=result
+        print(result)  # 删除
         self.talk_to = ""
 
     def outSelect(self, Item=None):
-        if not Item:
+        if Item:
             self.talk_to = Item.text()
-
+    # def keyPressEvent(self, QKeyEvent):
+    def keyPressEvent(self, QKeyEvent):
+        key = QKeyEvent.key()
+        if self.msg.hasFocus() and key==Qt.Key_Return and self.talk_to:
+            data=self.msg.text()
+            person=self.talk_to
+            print(person,data)
+            self.msg.clear()
 
     def UI(self):
         self.setWindowTitle("Chat_as_you_want")
@@ -88,8 +99,8 @@ class Chat(QWidget):
         h1 = QHBoxLayout(self)
         frm1 = QFormLayout(self)
 
-        friend_info=self.friends.split(" ")
-        l=len(friend_info)
+        friend_info = self.friends.split(" ")
+        l = len(friend_info)
 
         widget1 = QTableWidget()
         widget1.setColumnCount(2)
@@ -101,7 +112,7 @@ class Chat(QWidget):
         # tableWidget->verticalHeader()->setDefaultSectionSize(10); //设置行高
         widget1.verticalHeader().setDefaultSectionSize(35)
         for i in range(l):
-            widget1.setItem(i,0,QTableWidgetItem(friend_info[i]))
+            widget1.setItem(i, 0, QTableWidgetItem(friend_info[i]))
         widget1.itemClicked.connect(self.outSelect)  # 单击获取单元格中的内容
 
         edit2 = QLineEdit(self)
@@ -112,18 +123,17 @@ class Chat(QWidget):
         frm1.addRow(widget1, edit2)
 
         label1 = QLabel('pic', self)
-        edit3 = QLineEdit(self)
         # edit3.setFocusPolicy(QtCore.Qt.NoFocus)
-        edit3.setFixedHeight(200)
-        edit3.setAlignment(Qt.AlignLeft | Qt.AlignTop)
+
+        self.msg.setFixedHeight(200)
+        self.msg.setAlignment(Qt.AlignLeft | Qt.AlignTop)
         # edit3.setFixedWidth(600)
 
-        frm1.addRow(label1, edit3)
+        frm1.addRow(label1, self.msg)
         frm1.setSpacing(0)  # 无缝
 
         h1.addLayout(frm1)
         self.show()  # 窗口显示
-
 
 
 if __name__ == '__main__':
