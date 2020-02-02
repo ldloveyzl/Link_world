@@ -1,8 +1,9 @@
 import time
-from multiprocessing import process
+from multiprocessing import Process
 from multiprocessing.dummy import Process
+from threading import Thread
 
-from PyQt5.QtCore import QCoreApplication
+from PyQt5.QtCore import QCoreApplication, QTimer
 import PyQt5
 import sys
 from PyQt5 import QtCore
@@ -16,11 +17,9 @@ s = Client()
 def create_chat_window(result):
     res = Chat(result)
     list1.append(res)
-    process1 = Process(target=recv_msg)
-def recv_msg(self):  # 无法实现
-    while True:
-        data = s.recv_msg()
-        list1[0].show_msg(data)
+
+
+
 
 
 class LinkWorld(QWidget):
@@ -72,14 +71,13 @@ class LinkWorld(QWidget):
         result = s.login(n, p)
         if result:
             # result为朋友信息
-            create_chat_window(result)
+            create_chat_window(result[1])
             self.close()
         else:
             QMessageBox.information(self,  # 使用infomation信息框
                                     "Error",
                                     "登录失败",
                                     QMessageBox.Yes)
-
 
 
 class Chat(QWidget):
@@ -91,21 +89,34 @@ class Chat(QWidget):
         self.UI()
         print(result)  # 删除
         self.talk_to = ""
+        # self.generate_msg_thread()
 
+
+    def generate_msg_thread(self):
+        thread1 = Thread(target=self.recv_msg)
+        thread1.setDaemon(True)
+        thread1.start()
+        thread1.join()
+
+    def recv_msg(self):  # 无法实现
+        data = s.recv_msg()
+        print(data, 1)
+        self.show_msg(data)
 
     def outSelect(self, Item=None):
         if Item:
             self.talk_to = Item.text()
 
+
     def keyPressEvent(self, QKeyEvent):
         key = QKeyEvent.key()
-        if self.msg.hasFocus() and key==Qt.Key_Return and self.talk_to:
-            data=self.msg.text()
-            other=self.talk_to
+        if self.msg.hasFocus() and key == Qt.Key_Return and self.talk_to:
+            data = self.msg.text()
+            other = self.talk_to
             s.send_msg(other, data)
             self.msg.clear()
 
-    def show_msg(self,data):
+    def show_msg(self, data):
         text = self.msg_box.text()
         text += data + "\n"
         self.msg_box.setText(text)
@@ -164,4 +175,3 @@ if __name__ == '__main__':
     list1 = []
     a = LinkWorld()
     sys.exit(app.exec_())
-

@@ -21,7 +21,7 @@ class Client:
         info = data.decode().split(" ", 1)  # "OK friend friend   "
         if info[0] == 'OK':
             self.nickname = name
-            return info[1]
+            return True,info[1]
 
     def send_msg(self, other, msg):
         str1 = "C " + self.nickname + " " + other + " " + msg
