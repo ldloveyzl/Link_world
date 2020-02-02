@@ -28,6 +28,8 @@ class Fd:
             self.register(datas[1],datas[2],addr)
         elif req=='L':
             self.login(datas[1],datas[2],addr)
+        elif req=="C":
+            self.chat(datas[1],datas[2],datas[3])
 
     def register(self, name, pwd,addr):
         if db.register(name,pwd):
@@ -36,7 +38,7 @@ class Fd:
             self.fd.sendto("NO".encode(), addr)
 
     def login(self, name, pwd, addr):
-        if db.login(name, pwd):
+        if db.login(name, pwd,addr):
             friends=self.get_friends(name)
             msg="OK"+" "+friends
             self.fd.sendto(msg.encode(), addr)
@@ -46,6 +48,10 @@ class Fd:
     def get_friends(self,name):
         return db.getfriends(name)
 
+    def chat(self, name, friend, msg):
+        friend_addr=db.get_friend_addr(friend)
+        msg=name+":"+msg
+        self.fd.sendto(msg.encode(),friend_addr)
 
 if __name__ == '__main__':
     f=Fd()

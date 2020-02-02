@@ -48,12 +48,20 @@ class Database:
         #     self.db.rollback()
         #     return False
 
-    def login(self, name, pwd):
+    def login(self, name, pwd, addr):
         sql = "select name from user " \
               "where name=%s and pwd=%s;"
         pwd = change_passwd(pwd)
         self.cur.execute(sql, [name, pwd])
         if self.cur.fetchone():
+            sql = "update user set addr=%s,port=%s where name=%s"
+            try:
+                self.cur.execute(sql, [addr[0], addr[1], name])
+                self.db.commit()
+            except Exception as e:
+                print(e)
+                self.db.rollback()
+                return
             return True
 
     def getfriends(self, name):
@@ -65,6 +73,14 @@ class Database:
             str1 += " " + i[0]
         print(str1)
         return str1.strip()
+
+    def get_friend_addr(self, friend):
+        sql = "select addr,port from user where name = %s"
+        self.cur.execute(sql, friend)
+        fake_addr = self.cur.fetchone()
+        addr = fake_addr[0]
+        port = int(fake_addr[1])
+        return addr, port
 
     def query(self, word):
         sql = "select mean from words where word=%s;"

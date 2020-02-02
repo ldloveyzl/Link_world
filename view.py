@@ -1,3 +1,5 @@
+import time
+
 import PyQt5
 import sys
 from PyQt5 import QtCore
@@ -70,22 +72,29 @@ class Chat(QWidget):
     def __init__(self, result):
         super().__init__()
         self.friends = result
+        self.msg_box = QLineEdit(self)
         self.msg = QLineEdit(self)
         self.UI()
         print(result)  # 删除
         self.talk_to = ""
 
+
     def outSelect(self, Item=None):
         if Item:
             self.talk_to = Item.text()
-    # def keyPressEvent(self, QKeyEvent):
+
     def keyPressEvent(self, QKeyEvent):
         key = QKeyEvent.key()
         if self.msg.hasFocus() and key==Qt.Key_Return and self.talk_to:
             data=self.msg.text()
-            person=self.talk_to
-            print(person,data)
+            other=self.talk_to
+            s.send_msg(other, data)
             self.msg.clear()
+
+    def show_msg(self,data):
+        text = self.msg_box.text()
+        text += data + "\n"
+        self.msg_box.setText(text)
 
     def UI(self):
         self.setWindowTitle("Chat_as_you_want")
@@ -115,12 +124,11 @@ class Chat(QWidget):
             widget1.setItem(i, 0, QTableWidgetItem(friend_info[i]))
         widget1.itemClicked.connect(self.outSelect)  # 单击获取单元格中的内容
 
-        edit2 = QLineEdit(self)
-        edit2.setFocusPolicy(QtCore.Qt.NoFocus)  # 设置不可编辑
-        edit2.setFixedHeight(400)
-        edit2.setFixedWidth(600)
+        self.msg_box.setFocusPolicy(QtCore.Qt.NoFocus)  # 设置不可编辑
+        self.msg_box.setFixedHeight(400)
+        self.msg_box.setFixedWidth(600)
 
-        frm1.addRow(widget1, edit2)
+        frm1.addRow(widget1, self.msg_box)
 
         label1 = QLabel('pic', self)
         # edit3.setFocusPolicy(QtCore.Qt.NoFocus)
@@ -135,9 +143,14 @@ class Chat(QWidget):
         h1.addLayout(frm1)
         self.show()  # 窗口显示
 
+    def recv_msg(self): #无法实现
+        while True:
+            data=s.recv_msg()
+            self.show_msg(data)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     list1 = []
     a = LinkWorld()
     sys.exit(app.exec_())
+
