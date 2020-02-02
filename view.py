@@ -1,5 +1,8 @@
 import time
+from multiprocessing import process
+from multiprocessing.dummy import Process
 
+from PyQt5.QtCore import QCoreApplication
 import PyQt5
 import sys
 from PyQt5 import QtCore
@@ -8,6 +11,16 @@ from PyQt5.QtWidgets import *
 from client import *
 
 s = Client()
+
+
+def create_chat_window(result):
+    res = Chat(result)
+    list1.append(res)
+    process1 = Process(target=recv_msg)
+def recv_msg(self):  # 无法实现
+    while True:
+        data = s.recv_msg()
+        list1[0].show_msg(data)
 
 
 class LinkWorld(QWidget):
@@ -58,14 +71,15 @@ class LinkWorld(QWidget):
         p = self.pwd.text()
         result = s.login(n, p)
         if result:
-            res = Chat(result)  # result为朋友信息
-            global list1
-            list1.append(res)
+            # result为朋友信息
+            create_chat_window(result)
+            self.close()
         else:
             QMessageBox.information(self,  # 使用infomation信息框
                                     "Error",
                                     "登录失败",
                                     QMessageBox.Yes)
+
 
 
 class Chat(QWidget):
@@ -143,10 +157,7 @@ class Chat(QWidget):
         h1.addLayout(frm1)
         self.show()  # 窗口显示
 
-    def recv_msg(self): #无法实现
-        while True:
-            data=s.recv_msg()
-            self.show_msg(data)
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
