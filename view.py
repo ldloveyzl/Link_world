@@ -19,9 +19,6 @@ def create_chat_window(result):
     list1.append(res)
 
 
-
-
-
 class LinkWorld(QWidget):
     def __init__(self):
         super().__init__()
@@ -91,7 +88,6 @@ class Chat(QWidget):
         self.talk_to = ""
         # self.generate_msg_thread()
 
-
     def generate_msg_thread(self):
         thread1 = Thread(target=self.recv_msg)
         thread1.setDaemon(True)
@@ -99,14 +95,14 @@ class Chat(QWidget):
         thread1.join()
 
     def recv_msg(self):  # 无法实现
-        data = s.recv_msg()
-        print(data, 1)
-        self.show_msg(data)
+        while True:
+            data = s.recv_msg()
+            print(data, 1)
+            self.show_msg(data)
 
     def outSelect(self, Item=None):
         if Item:
             self.talk_to = Item.text()
-
 
     def keyPressEvent(self, QKeyEvent):
         key = QKeyEvent.key()
@@ -169,9 +165,10 @@ class Chat(QWidget):
         self.show()  # 窗口显示
 
 
-
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     list1 = []
     a = LinkWorld()
-    sys.exit(app.exec_())
+    app.exec_()
+    list1[0].generate_msg_thread()
+    # sys.exit()

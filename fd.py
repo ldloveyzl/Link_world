@@ -53,6 +53,7 @@ class Fd:
         friend_addr=db.get_friend_addr(friend)
         msg=name+":"+msg
         self.fd.sendto(msg.encode(),friend_addr)
+        print(msg,"发给",friend_addr)
 
 if __name__ == '__main__':
     f=Fd()

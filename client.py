@@ -30,4 +30,5 @@ class Client:
     def recv_msg(self):
         data, addr = self.client.recvfrom(2048)
         text=data.decode()
+        return text
 
