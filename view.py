@@ -9,20 +9,28 @@ import sys
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import *
-from client import *
+from threading import Lock
+lock=Lock()
+CHAT_MODE = False
 
-s = Client()
 
-
-def create_chat_window(result):
-    res = Chat(result)
+def create_chat_window(result, s, list1):
+    res = Chat(result, s)
+    # lock.acquire()
+    # global CHAT_MODE
+    # CHAT_MODE = True
+    # print(CHAT_MODE,1111)
+    # lock.release()
     list1.append(res)
 
 
+
 class LinkWorld(QWidget):
-    def __init__(self):
+    def __init__(self, s, list1):
         super().__init__()
         self.UI()
+        self.s = s
+        self.list1 = list1
 
     def UI(self):
         self.setWindowTitle("link_to_world")
@@ -51,7 +59,7 @@ class LinkWorld(QWidget):
     def btn1_click(self):
         n = self.name.text()
         p = self.pwd.text()
-        if not s.register(n, p):
+        if not self.s.register(n, p):
             QMessageBox.information(self,  # 使用infomation信息框
                                     "Sorry~",
                                     "注册失败",
@@ -65,10 +73,10 @@ class LinkWorld(QWidget):
     def btn2_click(self):
         n = self.name.text()
         p = self.pwd.text()
-        result = s.login(n, p)
+        result = self.s.login(n, p)
         if result:
             # result为朋友信息
-            create_chat_window(result[1])
+            create_chat_window(result[1], self.s, self.list1)
             self.close()
         else:
             QMessageBox.information(self,  # 使用infomation信息框
@@ -78,7 +86,7 @@ class LinkWorld(QWidget):
 
 
 class Chat(QWidget):
-    def __init__(self, result):
+    def __init__(self, result, s):
         super().__init__()
         self.friends = result
         self.msg_box = QLineEdit(self)
@@ -86,19 +94,25 @@ class Chat(QWidget):
         self.UI()
         print(result)  # 删除
         self.talk_to = ""
-        # self.generate_msg_thread()
+        self.s = s
+        # self.recv_msg_thread(self.s)
 
-    def generate_msg_thread(self):
-        thread1 = Thread(target=self.recv_msg)
+    def recv_msg_thread(self, s):
+        thread1 = Thread(target=self.recv_msg, args=(s,))
         thread1.setDaemon(True)
         thread1.start()
         thread1.join()
 
-    def recv_msg(self):  # 无法实现
+    def recv_msg(self, s):  # 无法实现
         while True:
             data = s.recv_msg()
             print(data, 1)
             self.show_msg(data)
+
+    def show_msg(self, data):
+        text = self.msg_box.text()
+        text += data + "\n"
+        self.msg_box.setText(text)
 
     def outSelect(self, Item=None):
         if Item:
@@ -109,13 +123,8 @@ class Chat(QWidget):
         if self.msg.hasFocus() and key == Qt.Key_Return and self.talk_to:
             data = self.msg.text()
             other = self.talk_to
-            s.send_msg(other, data)
+            self.s.send_msg(other, data)
             self.msg.clear()
-
-    def show_msg(self, data):
-        text = self.msg_box.text()
-        text += data + "\n"
-        self.msg_box.setText(text)
 
     def UI(self):
         self.setWindowTitle("Chat_as_you_want")
@@ -171,4 +180,4 @@ if __name__ == '__main__':
     a = LinkWorld()
     app.exec_()
     list1[0].generate_msg_thread()
-    # sys.exit()
+    sys.exit()

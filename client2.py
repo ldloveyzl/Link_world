@@ -1,7 +1,4 @@
 import socket
-
-from PyQt5.QtCore import QThread
-
 from client_config import *
 from view import *
 
@@ -44,37 +41,18 @@ def recv_msg_thread():
     thread1.start()
 
 
-code = 0
-
-
 def deal_recv_msg():  # 无法实现
-    global code
-    code = code + 1
-    if code == 1:
-        result = s.recv_msg()
-        if result:
-            # result为朋友信息
-            create_chat_window(result[1], s, list1)
-            a.close()
-        else:
-            QMessageBox.information(a,  # 使用infomation信息框
-                                    "Error",
-                                    "登录失败",
-                                    QMessageBox.Yes)
-        print("over")
-    result = s.recv_msg()
-    print(result, 19, code)
+    data = s.recv_msg()
+    print(data, 1)
     deal_recv_msg()
     # list1[0].show_msg(data)
-
-
-class Mythread(QThread):
-    pass
 
 
 list1 = []
 s = Client()
 app = QApplication(sys.argv)
 a = LinkWorld(s, list1)
-recv_msg_thread()
-sys.exit(app.exec_())
+# recv_msg_thread()
+app.exec_()
+
+# sys.exit()
