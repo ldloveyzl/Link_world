@@ -98,7 +98,7 @@ class Chat(QWidget):
     def __init__(self, result):
         super().__init__()
         self.friends = result
-        self.msg_box = QLineEdit(self)
+        self.msg_box = QTextEdit(self)
         self.msg = QLineEdit(self)
         self.UI()
         print(result)  # 删除
@@ -113,9 +113,9 @@ class Chat(QWidget):
         if rec_msg.empty():
             return
         data=rec_msg.get()
-        text = self.msg_box.text()
+        text = self.msg_box.toPlainText()
         text += data + "\n"
-        self.msg_box.setText(text)
+        self.msg_box.setPlainText(text)
 
     def outSelect(self, Item=None):
         if Item:
