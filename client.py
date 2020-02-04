@@ -3,7 +3,6 @@ import socket
 from PyQt5.QtCore import QThread
 
 from client_config import *
-from view import *
 
 
 class Client:
@@ -71,10 +70,10 @@ def deal_recv_msg():  # 无法实现
 class Mythread(QThread):
     pass
 
-
-list1 = []
-s = Client()
-app = QApplication(sys.argv)
-a = LinkWorld(s, list1)
-recv_msg_thread()
-sys.exit(app.exec_())
+if __name__ == '__main__':
+    list1 = []
+    s = Client()
+    app = QApplication(sys.argv)
+    a = LinkWorld(s, list1)
+    recv_msg_thread()
+    sys.exit(app.exec_())
