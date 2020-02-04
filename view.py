@@ -1,6 +1,5 @@
 import time
 from multiprocessing import Process
-from multiprocessing.dummy import Process
 from threading import Thread
 
 from PyQt5.QtCore import QCoreApplication, QTimer
@@ -11,26 +10,31 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import *
 from threading import Lock
 from client import *
+from multiprocessing import Queue
+
+rec_msg = Queue()
 
 
 def create_chat_window(result):
     res = Chat(result)
     list1.append(res)
-    recv_msg_thread()
 
 
-def recv_msg_thread():
-    thread1 = Thread(target=recv_msg)
-    thread1.setDaemon(True)
-    thread1.start()
-    thread1.join()
+
+
+
+def recv_msg_process():
+    process1 = Process(target=recv_msg)
+    process1.start()
+    print("已启动")
+
 
 
 def recv_msg():  # 无法实现
     while True:
         data = s.recv_msg()
-        print(data, 1)
-        list1[0].show_msg(data)
+        rec_msg.put(data)
+        list1[0].show_msg(1)
 
 
 class LinkWorld(QWidget):
@@ -79,10 +83,13 @@ class LinkWorld(QWidget):
     def btn2_click(self):
         n = self.name.text()
         p = self.pwd.text()
-        result = s.login(n, p)
-        if result:
+        s.login(n, p)
+        result=rec_msg.get()
+        info = result.split(" ", 1)  # "OK friend friend   "
+        if info[0] == 'OK':
             # result为朋友信息
-            create_chat_window(result[1])
+            create_chat_window(info[1])
+            s.nickname=n
             self.close()
         else:
             QMessageBox.information(self,  # 使用infomation信息框
@@ -167,10 +174,14 @@ class Chat(QWidget):
         self.show()  # 窗口显示
 
 
+
 if __name__ == '__main__':
+    # chat_started()
     s = Client()
-    app = QApplication(sys.argv)
+    recv_msg_process()
     list1 = []
+    app = QApplication(sys.argv)
     a = LinkWorld()
     app.exec_()
-    sys.exit()
+
+    # sys.exit()

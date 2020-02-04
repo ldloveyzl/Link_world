@@ -21,11 +21,11 @@ class Client:
     def login(self, name, pwd):
         str1 = "L " + name + ' ' + pwd
         self.client.sendto(str1.encode(), ADDR)
-        data, addr = self.client.recvfrom(2048)
-        info = data.decode().split(" ", 1)  # "OK friend friend   "
-        if info[0] == 'OK':
-            self.nickname = name
-            return True, info[1]
+        # data, addr = self.client.recvfrom(2048)
+        # info = data.decode().split(" ", 1)  # "OK friend friend   "
+        # if info[0] == 'OK':
+        #     self.nickname = name
+        #     return True, info[1]
 
     def send_msg(self, other, msg):
         str1 = "C " + self.nickname + " " + other + " " + msg
