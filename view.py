@@ -20,9 +20,6 @@ def create_chat_window(result):
     list1.append(res)
 
 
-
-
-
 def recv_msg_process():
     process1 = Process(target=recv_msg)
     process1.start()
@@ -34,7 +31,6 @@ def recv_msg():  # 无法实现
     while True:
         data = s.recv_msg()
         rec_msg.put(data)
-        list1[0].show_msg(1)
 
 
 class LinkWorld(QWidget):
@@ -107,9 +103,13 @@ class Chat(QWidget):
         self.UI()
         print(result)  # 删除
         self.talk_to = ""
-        # self.recv_msg_thread(self.s)
+        self.timer = QTimer(self)  # 呼叫 QTimer
+        self.timer.timeout.connect(self.show_msg)  # 當時間到時會執行 run
+        self.timer.start(6000)  # 啟動 Timer .. 每隔1000ms 會觸發 run
+        self.total = 0  # 初始 total
 
-    def show_msg(self, data):
+    def show_msg(self):
+        data=rec_msg.get()
         text = self.msg_box.text()
         text += data + "\n"
         self.msg_box.setText(text)
