@@ -105,10 +105,13 @@ class Chat(QWidget):
         self.talk_to = ""
         self.timer = QTimer(self)  # 呼叫 QTimer
         self.timer.timeout.connect(self.show_msg)  # 當時間到時會執行 run
-        self.timer.start(6000)  # 啟動 Timer .. 每隔1000ms 會觸發 run
+        self.timer.start(1000)  # 啟動 Timer .. 每隔1000ms 會觸發 run
         self.total = 0  # 初始 total
 
     def show_msg(self):
+        # s.has_msg()
+        if rec_msg.empty():
+            return
         data=rec_msg.get()
         text = self.msg_box.text()
         text += data + "\n"

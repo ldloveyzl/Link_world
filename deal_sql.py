@@ -1,3 +1,5 @@
+import time
+
 import pymysql
 import hashlib
 import deal_sql
@@ -82,6 +84,14 @@ class Database:
         port = int(fake_addr[1])
         return addr, port
 
+    # def save_msg(self,name,friend,msg):
+    #     sql="insert into chat_his (sender,rever,record,times) values (%s,%s,%s,%s);"
+    #     try:
+    #         self.cur.execute()
+    #         self.db.commit(sql,[name,friend,msg,time.ctime()])
+    #     except:
+    #         print('error')
+    #         self.db.rollback()
     def query(self, word):
         sql = "select mean from words where word=%s;"
         self.cur.execute(sql, [word])

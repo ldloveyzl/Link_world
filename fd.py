@@ -30,6 +30,8 @@ class Fd:
             self.login(datas[1],datas[2],addr)
         elif req=="C":
             self.chat(datas[1],datas[2],datas[3])
+        elif req=='H':
+            self.has_msg(datas[1])
 
     def register(self, name, pwd,addr):
         if db.register(name,pwd):
@@ -54,6 +56,11 @@ class Fd:
         msg=name+":"+msg
         self.fd.sendto(msg.encode(),friend_addr)
         print(msg,"发给",friend_addr)
+        # db.save_msg(name,friend,msg)
+
+    def has_msg(self, name):
+        pass
+
 
 if __name__ == '__main__':
     f=Fd()
