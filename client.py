@@ -36,11 +36,6 @@ class Client:
         text = data.decode()
         return text
 
-    # def has_msg(self):
-    #     str1 = "H " + self.nickname  # 有消息吗
-    #     self.client.sendto(str1.encode(), ADDR)
-
-
 def recv_msg_thread():
     thread1 = Thread(target=deal_recv_msg)
     thread1.setDaemon(True)
