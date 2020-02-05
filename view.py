@@ -22,6 +22,7 @@ def create_chat_window(result):
 
 def recv_msg_process():
     process1 = Process(target=recv_msg)
+    process1.daemon=True
     process1.start()
     print("已启动")
 
@@ -65,7 +66,10 @@ class LinkWorld(QWidget):
     def btn1_click(self):
         n = self.name.text()
         p = self.pwd.text()
-        if not s.register(n, p):
+        s.register(n, p)
+        result = rec_msg.get()
+        print(result,'print')
+        if result=='OK':
             QMessageBox.information(self,  # 使用infomation信息框
                                     "Sorry~",
                                     "注册失败",
@@ -185,6 +189,4 @@ if __name__ == '__main__':
     list1 = []
     app = QApplication(sys.argv)
     a = LinkWorld()
-    app.exec_()
-
-    # sys.exit()
+    sys.exit(app.exec_())

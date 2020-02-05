@@ -56,7 +56,7 @@ class Fd:
         msg=name+":"+msg
         self.fd.sendto(msg.encode(),friend_addr)
         print(msg,"发给",friend_addr)
-        # db.save_msg(name,friend,msg)
+        db.save_msg(name,friend,msg)
 
     def has_msg(self, name):
         pass

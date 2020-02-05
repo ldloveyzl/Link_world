@@ -13,10 +13,10 @@ class Client:
     def register(self, name, pwd):
         str1 = "R " + name + ' ' + pwd
         self.client.sendto(str1.encode(), ADDR)
-        data, addr = self.client.recvfrom(2048)
-        info = data.decode()
-        if info == 'OK':
-            return True
+        # data, addr = self.client.recvfrom(2048)
+        # info = data.decode()
+        # if info == 'OK':
+        #     return True
 
     def login(self, name, pwd):
         str1 = "L " + name + ' ' + pwd

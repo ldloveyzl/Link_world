@@ -16,7 +16,7 @@
                       port varchar(20) default null ,
                       index(name));
     用户对话记录表 chat_his id sender rever record times    rever是接受信息的人
-    create table chat_his(id int primary key auto_increment,sender varchar(20) not null,rever varchar(20) not null,record text,times time);
+    create table chat_his(id int primary key auto_increment,sender varchar(20) not null,rever varchar(20) not null,record text,moment datetime default now());
     friend id name frie
     create table friend(id int primary key auto_increment,name varchar(20),frie varchar(20));
 insert into friend (name,frie) values ("uu","ll"),("uu","tt"),("uu","ss");
