@@ -11,7 +11,6 @@ from PyQt5.QtWidgets import *
 from threading import Lock
 from client import *
 from multiprocessing import Queue
-from add_guy import *
 rec_msg = Queue()
 
 
@@ -179,7 +178,6 @@ class Chat(QWidget):
 
         h1.addLayout(frm1)
         self.show()  # 窗口显示
-    def add_friend(self):
 
 
 
